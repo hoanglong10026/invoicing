@@ -4,16 +4,18 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CategoriesTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
+
+    use RefreshDatabase;
+
     public function test_categories_page(): void
     {
         $user = User::factory()->create();
+        Category::factory(10)->create();
 
         $response = $this
             ->actingAs($user)
@@ -72,7 +74,7 @@ class CategoriesTest extends TestCase
         $response->assertStatus(302);
     }
 
-    public function test_create_new_category_update_name(): void
+    public function test_category_update_name(): void
     {
         $user = User::factory()->create();
         $category = Category::factory()->create();
