@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
+use App\Models\Fruit;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,13 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Category::factory(10)->create();
+        $categories = Category::factory(5)->create();
+
+        $categories->map(function ($category) {
+            Fruit::factory(2)->create([
+                'category_id' => $category->id
+            ]);
+        });
+
     }
 }

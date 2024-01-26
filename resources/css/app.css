@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 
-button, input {
+button, input, select {
     box-shadow: none !important;
     outline: none !important;
 }

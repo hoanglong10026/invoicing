@@ -21,4 +21,9 @@ class Category extends Model
     {
         return CategoryFactory::new ();
     }
+
+    public function fruits()
+    {
+        return $this->hasMany(Fruit::class, 'category_id', 'id');
+    }
 }

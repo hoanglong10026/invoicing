@@ -15,13 +15,13 @@ export default function Authenticated({ user, header, children }) {
             route: "dashboard",
         },
         {
-            title: "Fruit category",
+            title: "Category",
             route: "categories.index",
         },
-        // {
-        //     title: "Fruit item",
-        //     route: "items",
-        // },
+        {
+            title: "Fruit",
+            route: "fruits.index",
+        },
         // {
         //     title: "Invoices",
         //     route: "invoices",

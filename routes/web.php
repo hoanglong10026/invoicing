@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FruitController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,9 @@ Route::middleware('auth')->group(function () {
 
     // category
     Route::resource('categories', CategoryController::class);
+
+    // fruits
+    Route::resource('fruits', FruitController::class);
 
 });
 
