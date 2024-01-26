@@ -22,7 +22,7 @@ export default function InvoicesItem({
                 <PrimaryButton
                     onClick={() => {
                         setUpdateData({
-                            ...fruit,
+                            ...invoice,
                         });
                     }}
                 >
@@ -31,7 +31,7 @@ export default function InvoicesItem({
                 <PrimaryButton
                     onClick={() => {
                         setDeleteData({
-                            ...fruit,
+                            ...invoice,
                         });
                     }}
                 >

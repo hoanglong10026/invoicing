@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InvoiceRequest;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -33,9 +34,32 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(InvoiceRequest $request)
     {
-        //
+
+        $customerName = $request->get('customer_name');
+        $invoiceDetails = $request->get('invoice_detail', []);
+
+        $invoice = new Invoice();
+        $invoice->customer_name = $customerName;
+        $invoice->save();
+
+        $total = 0;
+        foreach ($invoiceDetails as $detail) {
+
+            $amount = $detail['quantity'] * $detail['price'];
+            $invoice->invoice_details()->create([
+                'fruit_id' => $detail['fruit_id'],
+                'price' => $detail['price'],
+                'quantity' => $detail['quantity'],
+                'amount' => $amount,
+            ]);
+
+            $total += $amount;
+        }
+
+        $invoice->amount = $total;
+        $invoice->save();
     }
 
     /**
@@ -67,6 +91,7 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->invoice_details()->delete();
+        $invoice->delete();
     }
 }
