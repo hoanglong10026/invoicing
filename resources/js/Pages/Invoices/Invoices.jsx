@@ -1,17 +1,22 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { useState } from "react";
+import { createRef, useState } from "react";
 import InvoicesItem from "./InvoicesItem";
 import DeleteInvoiceModal from "./DeleteInvoiceModal";
+import AddInvoiceModal from "./AddInvoiceModal";
 
-export default function Invoices({ auth, invoices }) {
+export default function Invoices({ auth, invoices, fruits }) {
     const title = "Invoices";
 
     const [deleteData, setDeleteData] = useState(null);
     const [updateData, setUpdateData] = useState(null);
+    const [addData, setAddData] = useState(null);
 
-    console.log('invoices', invoices)
+    const invoiceRef = createRef();
+
+    console.log("invoices", invoices);
+    console.log("fruits", fruits);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -28,9 +33,7 @@ export default function Invoices({ auth, invoices }) {
                     <div className="mb-5 text-right">
                         <PrimaryButton
                             onClick={() => {
-                                setUpdateData({
-                                    id: -1,
-                                });
+                                invoiceRef.current.open();
                             }}
                         >
                             Add Invoice
@@ -79,6 +82,7 @@ export default function Invoices({ auth, invoices }) {
                 </div>
             </div>
 
+            <AddInvoiceModal ref={invoiceRef} fruits={fruits} />
             <DeleteInvoiceModal invoice={deleteData} />
         </AuthenticatedLayout>
     );

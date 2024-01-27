@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InvoiceRequest;
+use App\Models\Fruit;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,8 +19,11 @@ class InvoiceController extends Controller
             $query->with(['fruit']);
         }])->get();
 
+        $fruits = Fruit::with('category:id,name')->get();
+
         return Inertia::render('Invoices/Invoices', [
             'invoices' => $invoices,
+            'fruits' => $fruits
         ]);
     }
 
