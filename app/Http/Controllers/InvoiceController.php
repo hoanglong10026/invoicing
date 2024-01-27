@@ -42,7 +42,7 @@ class InvoiceController extends Controller
     {
 
         $customerName = $request->get('customer_name');
-        $invoiceDetails = $request->get('invoice_detail', []);
+        $invoiceDetails = $request->get('invoice_details', []);
 
         $invoice = new Invoice();
         $invoice->customer_name = $customerName;

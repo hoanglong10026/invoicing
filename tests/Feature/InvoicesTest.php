@@ -75,10 +75,10 @@ class InvoicesTest extends TestCase
         $ids = fake()->randomElements($fruitsId, 2);
         $fruits = Fruit::whereIn('id', $ids)->get();
 
-        $invoice_detail = [];
-        $fruits->each(function ($fruit) use (&$invoice_detail) {
+        $invoice_details = [];
+        $fruits->each(function ($fruit) use (&$invoice_details) {
             $quantity = fake()->numberBetween(1, 10);
-            $invoice_detail[] = [
+            $invoice_details[] = [
                 'fruit_id' => $fruit->id,
                 'price' => $fruit->price,
                 'quantity' => $quantity,
@@ -87,7 +87,7 @@ class InvoicesTest extends TestCase
 
         $data = [
             'customer_name' => fake()->name(),
-            'invoice_detail' => $invoice_detail,
+            'invoice_details' => $invoice_details,
         ];
 
         $response = $this
@@ -97,7 +97,7 @@ class InvoicesTest extends TestCase
         $response->assertOk();
         $this->assertDatabaseHas('invoices', ['customer_name' => $data['customer_name']]);
 
-        foreach ($invoice_detail as $detail) {
+        foreach ($invoice_details as $detail) {
             $this->assertDatabaseHas('invoice_details', [
                 'fruit_id' => $detail['fruit_id'],
                 'price' => $detail['price'],

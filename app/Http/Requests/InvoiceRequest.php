@@ -26,12 +26,12 @@ class InvoiceRequest extends FormRequest
 
         return [
             'customer_name' => ['required'],
-            'invoice_detail.*.fruit_id' => ['required', Rule::exists(Fruit::class, 'id')],
-            'invoice_detail.*.quantity' => ['required', 'numeric', 'min:1'],
-            'invoice_detail.*.price' => ['required', 'numeric', 'min:1'],
+            'invoice_details.*.fruit_id' => ['required', Rule::exists(Fruit::class, 'id')],
+            'invoice_details.*.quantity' => ['required', 'numeric', 'min:1'],
+            'invoice_details.*.price' => ['required', 'numeric', 'min:1'],
             // validate for updating
-            'invoice_detail.*.id' => ['nullable', 'numeric'],
-            'invoice_detail.*.delete' => ['nullable', 'boolean'],
+            'invoice_details.*.id' => ['nullable', 'numeric'],
+            'invoice_details.*.delete' => ['nullable', 'boolean'],
         ];
     }
 }
