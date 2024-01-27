@@ -83,7 +83,7 @@ const AddFruitForm = ({ fruits, onChange }) => {
 
     return (
         <>
-            <div className="grid grid-cols-4 gap-4 mt-6">
+            <div className="grid md:grid-cols-4 gap-4 mt-6">
                 <h3 className="text-md font-medium text-gray-900 flex items-center">
                     <div>Add new Fruit </div>
                 </h3>

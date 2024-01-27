@@ -6,6 +6,7 @@ import InvoicesItem from "./InvoicesItem";
 import DeleteInvoiceModal from "./DeleteInvoiceModal";
 import AddInvoiceModal from "./AddInvoiceModal";
 import EditInvoiceModal from "./EditInvoiceModal";
+import ViewInvoiceModal from "./ViewInvoiceModal";
 
 export default function Invoices({ auth, invoices, fruits }) {
     const title = "Invoices";
@@ -14,6 +15,7 @@ export default function Invoices({ auth, invoices, fruits }) {
 
     const invoiceRef = createRef();
     const editInvoiceRef = createRef();
+    const viewInvoiceRef = createRef();
 
     return (
         <AuthenticatedLayout
@@ -70,6 +72,7 @@ export default function Invoices({ auth, invoices, fruits }) {
                                                 index={index}
                                                 setDeleteData={setDeleteData}
                                                 editInvoiceRef={editInvoiceRef}
+                                                viewInvoiceRef={viewInvoiceRef}
                                             />
                                         );
                                     })}
@@ -82,6 +85,7 @@ export default function Invoices({ auth, invoices, fruits }) {
 
             <AddInvoiceModal ref={invoiceRef} fruits={fruits} />
             <EditInvoiceModal ref={editInvoiceRef} fruits={fruits} />
+            <ViewInvoiceModal ref={viewInvoiceRef} fruits={fruits} />
             <DeleteInvoiceModal invoice={deleteData} />
         </AuthenticatedLayout>
     );

@@ -5,6 +5,7 @@ import { formatNumber } from "@/Hooks/useFormat";
 export default function InvoicesItem({
     setDeleteData,
     editInvoiceRef,
+    viewInvoiceRef,
     invoice,
     index,
 }) {
@@ -19,6 +20,13 @@ export default function InvoicesItem({
             <td>{createdAt}</td>
             <td>{updatedAt === createdAt ? "-" : updatedAt}</td>
             <td className="flex gap-4">
+                <PrimaryButton
+                    onClick={() => {
+                        viewInvoiceRef.current.open(invoice);
+                    }}
+                >
+                    Invoice
+                </PrimaryButton>
                 <PrimaryButton
                     onClick={() => {
                         editInvoiceRef.current.open(invoice);
