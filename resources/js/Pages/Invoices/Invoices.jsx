@@ -5,18 +5,16 @@ import { createRef, useState } from "react";
 import InvoicesItem from "./InvoicesItem";
 import DeleteInvoiceModal from "./DeleteInvoiceModal";
 import AddInvoiceModal from "./AddInvoiceModal";
+import EditInvoiceModal from "./EditInvoiceModal";
 
 export default function Invoices({ auth, invoices, fruits }) {
     const title = "Invoices";
 
     const [deleteData, setDeleteData] = useState(null);
-    const [updateData, setUpdateData] = useState(null);
-    const [addData, setAddData] = useState(null);
 
     const invoiceRef = createRef();
+    const editInvoiceRef = createRef();
 
-    console.log("invoices", invoices);
-    console.log("fruits", fruits);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -71,7 +69,7 @@ export default function Invoices({ auth, invoices, fruits }) {
                                                 invoice={invoice}
                                                 index={index}
                                                 setDeleteData={setDeleteData}
-                                                setUpdateData={setUpdateData}
+                                                editInvoiceRef={editInvoiceRef}
                                             />
                                         );
                                     })}
@@ -83,6 +81,7 @@ export default function Invoices({ auth, invoices, fruits }) {
             </div>
 
             <AddInvoiceModal ref={invoiceRef} fruits={fruits} />
+            <EditInvoiceModal ref={editInvoiceRef} fruits={fruits} />
             <DeleteInvoiceModal invoice={deleteData} />
         </AuthenticatedLayout>
     );

@@ -8,19 +8,20 @@ import { useForm } from "@inertiajs/react";
 import { forwardRef, useImperativeHandle } from "react";
 import AddFruitForm from "./components/AddFruitForm";
 import { formatNumber } from "@/Hooks/useFormat";
+import cs from "classnames";
 
-const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
-    const { data, setData, processing, post, reset, errors, clearErrors } =
+const EditInvoiceModal = forwardRef(({ fruits }, ref) => {
+    const { data, setData, processing, put, reset, errors, clearErrors } =
         useForm({
             openModal: false,
-            invoice_detail: [],
+            invoice_details: [],
         });
 
     useImperativeHandle(ref, () => ({
-        open: () => {
+        open: (value) => {
             setData({
                 openModal: true,
-                invoice_detail: [],
+                ...value,
             });
         },
     }));
@@ -28,7 +29,7 @@ const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
     const closeModal = () => {
         setData({
             openModal: false,
-            invoice_detail: [],
+            invoice_details: [],
         });
 
         reset();
@@ -38,21 +39,34 @@ const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
     const saveInvoice = (e) => {
         e.preventDefault();
 
-        post(route("invoices.store"), {
-            preserveScroll: true,
-            onSuccess: () => closeModal(),
-            onError: () => {},
-        });
+        put(
+            route("invoices.update", {
+                invoice: data.id,
+            }),
+            {
+                preserveScroll: true,
+                onSuccess: () => closeModal(),
+                onError: () => {},
+            }
+        );
     };
 
-    const removeDetail = (index) => {
-        let details = [...data.invoice_detail];
-        details.splice(index, 1);
-        setData("invoice_detail", details);
+    const removeDetail = (index, detail) => {
+        let details = [...data.invoice_details];
+        if (detail?.id) {
+            details[index] = {
+                ...details[index],
+                delete: !detail?.delete,
+            };
+        } else {
+            details.splice(index, 1);
+        }
+
+        setData("invoice_details", details);
     };
 
     const addDetail = (newDetail) => {
-        const details = data.invoice_detail;
+        const details = data.invoice_details;
 
         // check fruit exist in cart
         const index = details.findIndex(
@@ -62,23 +76,21 @@ const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
         if (index == -1) {
             details.push(newDetail);
         } else {
-            const detail = details[index];
-            let quantity = parseInt(detail.quantity);
-            quantity += parseInt(newDetail.quantity);
+            let quantity = parseInt(newDetail.quantity);
             details[index] = {
                 ...details[index],
                 quantity,
             };
         }
 
-        setData("invoice_detail", details);
+        setData("invoice_details", details);
     };
 
     return (
         <Modal show={data.openModal} onClose={closeModal}>
             <form onSubmit={saveInvoice} className="p-6" id="invoice-frm">
                 <h2 className="text-lg font-medium text-gray-900">
-                    Add Invoice
+                    Edit Invoice
                 </h2>
 
                 <div className="mt-6">
@@ -117,14 +129,19 @@ const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.invoice_detail.map((detail, index) => {
+                            {data.invoice_details.map((detail, index) => {
                                 const fruit = fruits.find(
                                     (f) => f.id === parseInt(detail.fruit_id)
                                 );
 
                                 const amount = fruit.price * detail.quantity;
                                 return (
-                                    <tr key={`${index}-${fruit.id}`}>
+                                    <tr
+                                        key={`${index}-${fruit.id}`}
+                                        className={cs(
+                                            detail.delete && "line-through"
+                                        )}
+                                    >
                                         <td>{index + 1}</td>
                                         <td>{fruit.category.name}</td>
                                         <td>{fruit.name}</td>
@@ -144,19 +161,24 @@ const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
                                             <PrimaryButton
                                                 type="button"
                                                 onClick={() =>
-                                                    removeDetail(index)
+                                                    removeDetail(index, detail)
                                                 }
                                             >
-                                                Delete
+                                                {detail?.delete
+                                                    ? "Recover"
+                                                    : "Delete"}
                                             </PrimaryButton>
                                         </td>
                                     </tr>
                                 );
                             })}
 
-                            {data.invoice_detail.length === 0 && (
+                            {data.invoice_details.length === 0 && (
                                 <tr>
-                                    <td colSpan={8} className="text-center text-gray-300">
+                                    <td
+                                        colSpan={8}
+                                        className="text-center text-gray-300"
+                                    >
                                         Empty data
                                     </td>
                                 </tr>
@@ -188,4 +210,4 @@ const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
     );
 });
 
-export default AddInvoiceModal;
+export default EditInvoiceModal;

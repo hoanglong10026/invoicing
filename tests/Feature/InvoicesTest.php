@@ -158,4 +158,82 @@ class InvoicesTest extends TestCase
         $this->assertSoftDeleted('invoices', ['id' => $id]);
     }
 
+    public function test_edit_invoice(): void
+    {
+        // create data
+        $categories = Category::factory(5)->create();
+
+        $categories->map(function ($category) {
+            Fruit::factory(2)->create([
+                'category_id' => $category->id,
+            ]);
+        });
+
+        $lastInvoice = null;
+        $details = [];
+        Invoice::factory()->create()->each(function ($invoice) use (&$lastInvoice, &$details) {
+
+            $lastInvoice = $invoice;
+            $fruitsId = Fruit::get()->pluck('id');
+            $ids = fake()->randomElements($fruitsId, 2);
+
+            $fruits = Fruit::whereIn('id', $ids)->get();
+
+            $total = 0;
+            $details = $fruits->map(function ($fruit) use ($invoice, &$total) {
+
+                $quantity = fake()->numberBetween(1, 10);
+                $amount = $quantity * $fruit->price;
+                $total += $amount;
+
+                return InvoiceDetail::factory()->create([
+                    'invoice_id' => $invoice->id,
+                    'fruit_id' => $fruit->id,
+                    'price' => $fruit->price,
+                    'quantity' => $quantity,
+                    'amount' => $amount,
+                ]);
+            });
+
+            $invoice->amount = $total;
+            $invoice->save();
+        });
+
+        $user = User::factory()->create();
+        $id = $lastInvoice->id;
+
+        $invoice_details = $details->toArray();
+
+        $detailDelete = $invoice_details[0];
+
+        $invoice_details[0] = [
+            ...$invoice_details[0],
+            'delete' => true,
+        ];
+
+        $invoice_details[1] = [
+            ...$invoice_details[1],
+            'quantity' => 100,
+        ];
+
+        $data = [
+            'customer_name' => fake()->name(),
+            'invoice_details' => $invoice_details,
+        ];
+        $response = $this
+            ->actingAs($user)
+            ->put(route('invoices.update', ['invoice' => $id]), $data);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('invoices', [
+            'id' => $lastInvoice->id,
+            'customer_name' => $data['customer_name'],
+        ]);
+        $this->assertSoftDeleted('invoice_details', ['id' => $detailDelete['id']]);
+        $this->assertDatabaseHas('invoice_details', [
+            'id' => $invoice_details[1]['id'],
+            'quantity' => 100,
+        ]);
+    }
+
 }

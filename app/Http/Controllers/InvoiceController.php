@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\InvoiceRequest;
 use App\Models\Fruit;
 use App\Models\Invoice;
+use App\Models\InvoiceDetail;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,7 +24,7 @@ class InvoiceController extends Controller
 
         return Inertia::render('Invoices/Invoices', [
             'invoices' => $invoices,
-            'fruits' => $fruits
+            'fruits' => $fruits,
         ]);
     }
 
@@ -85,9 +86,49 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Invoice $invoice)
+    public function update(InvoiceRequest $request, Invoice $invoice)
     {
-        //
+        $customerName = $request->get('customer_name');
+        $invoiceDetails = $request->get('invoice_details', []);
+
+        $invoice->customer_name = $customerName;
+        $invoice->save();
+
+        $total = 0;
+        foreach ($invoiceDetails as $detail) {
+
+            $amount = $detail['quantity'] * $detail['price'];
+
+            if (!empty($detail['id'])) {
+                // delete
+                if (!empty($detail['delete'])) {
+                    $amount = 0;
+                    InvoiceDetail::where('id', $detail['id'])->where('invoice_id', $invoice->id)->delete();
+                } else {
+                    // edit
+                    $invoiceDetail = InvoiceDetail::where('id', $detail['id'])->where('invoice_id', $invoice->id)->firstOrFail();
+                    $invoiceDetail->price = $detail['price'];
+                    $invoiceDetail->quantity = $detail['quantity'];
+                    $invoiceDetail->amount = $amount;
+                    $invoiceDetail->save();
+                }
+
+            } else {
+                // create
+                $invoice->invoice_details()->create([
+                    'fruit_id' => $detail['fruit_id'],
+                    'price' => $detail['price'],
+                    'quantity' => $detail['quantity'],
+                    'amount' => $amount,
+                ]);
+            }
+
+            $total += $amount;
+        }
+
+        $invoice->amount = $total;
+        $invoice->save();
+
     }
 
     /**
