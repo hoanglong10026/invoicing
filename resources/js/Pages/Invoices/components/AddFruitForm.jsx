@@ -68,7 +68,7 @@ const AddFruitForm = ({ fruits, onChange }) => {
             });
         }
 
-        if (errors.fruit_id === null && errors.quantity === null) {
+        if (data.fruit_id && data.quantity) {
             const fruit = fruits.find((f) => f.id === parseInt(data.fruit_id));
             onChange({
                 ...data,
