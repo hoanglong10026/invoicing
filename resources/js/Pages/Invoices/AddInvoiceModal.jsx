@@ -153,6 +153,14 @@ const AddInvoiceModal = forwardRef(({ fruits }, ref) => {
                                     </tr>
                                 );
                             })}
+
+                            {data.invoice_detail.length === 0 && (
+                                <tr>
+                                    <td colSpan={8} className="text-center text-gray-300">
+                                        Empty data
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
