@@ -17,7 +17,7 @@ export default function InvoicesItem({
             <td>{invoice.customer_name}</td>
             <td className="text-right pr-5">{formatNumber(invoice.amount)}</td>
             <td>{createdAt}</td>
-            <td>{updatedAt === createdAt ? "NA" : updatedAt}</td>
+            <td>{updatedAt === createdAt ? "-" : updatedAt}</td>
             <td className="flex gap-4">
                 <PrimaryButton
                     onClick={() => {
