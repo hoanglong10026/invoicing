@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public function index()
     {
 
-        $data = Category::all();
+        $data = Category::withCount(['fruits'])->get();
         return Inertia::render('Categories/Categories', [
             'categories' => $data,
         ]);

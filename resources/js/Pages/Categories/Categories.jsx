@@ -10,6 +10,7 @@ import CategoriesItem from "./CategoriesItem";
 export default function Categories({ auth, categories }) {
     const title = "Fruit Categories";
 
+    console.log('categories', categories)
     const [deleteData, setDeleteData] = useState(null);
     const [updateData, setUpdateData] = useState(null);
 
@@ -45,6 +46,7 @@ export default function Categories({ auth, categories }) {
                                     <tr>
                                         <th className="text-left pb-5">No</th>
                                         <th className="text-left pb-5">Name</th>
+                                        <th className="text-left pb-5">Fruits</th>
                                         <th className="text-left pb-5">
                                             Actions
                                         </th>

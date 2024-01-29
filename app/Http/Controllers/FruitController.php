@@ -14,7 +14,7 @@ class FruitController extends Controller
      */
     public function index()
     {
-        $fruits = Fruit::with(['category:id,name'])->get();
+        $fruits = Fruit::with(['category:id,name'])->withCount(['invoice'])->get();
         $categories = Category::all();
 
         return Inertia::render('Fruits/Fruits', [

@@ -12,6 +12,7 @@ export default function Fruits({ auth, categories, fruits }) {
     const [deleteData, setDeleteData] = useState(null);
     const [updateData, setUpdateData] = useState(null);
 
+    console.log('fruits', fruits)
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -52,6 +53,9 @@ export default function Fruits({ auth, categories, fruits }) {
                                         </th>
                                         <th className="text-left pb-5">
                                             Category
+                                        </th>
+                                        <th className="text-left pb-5">
+                                            Invoice
                                         </th>
                                         <th className="text-left pb-5">
                                             Actions

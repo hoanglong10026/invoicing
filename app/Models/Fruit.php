@@ -21,4 +21,9 @@ class Fruit extends Model
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
+    public function invoice()
+    {
+        return $this->hasMany(InvoiceDetail::class, 'fruit_id', 'id');
+    }
+
 }
